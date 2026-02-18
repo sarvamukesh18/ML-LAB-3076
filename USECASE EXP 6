@@ -1,0 +1,55 @@
+# ----------------------------------
+# Student Performance Prediction
+# Using Discrete Bayesian Network
+# ----------------------------------
+
+import pandas as pd
+from pgmpy.models import DiscreteBayesianNetwork
+from pgmpy.estimators import MaximumLikelihoodEstimator
+from pgmpy.inference import VariableElimination
+
+# ----------------------------
+# Step 1: Create Dataset
+# ----------------------------
+
+data = pd.DataFrame({
+    'StudyHours': ['Low', 'Low', 'Medium', 'High', 'High', 'Medium', 'Low', 'High', 'Medium', 'High'],
+    'Attendance': ['Low', 'High', 'High', 'High', 'Low', 'High', 'Low', 'High', 'Low', 'High'],
+    'Pass':       ['No',  'No',   'Yes',   'Yes',  'Yes', 'Yes',  'No',  'Yes',  'No',  'Yes']
+})
+
+# ----------------------------
+# Step 2: Define Model Structure
+# ----------------------------
+
+model = DiscreteBayesianNetwork([
+    ('StudyHours', 'Pass'),
+    ('Attendance', 'Pass')
+])
+
+# ----------------------------
+# Step 3: Train Model
+# ----------------------------
+
+model.fit(data, estimator=MaximumLikelihoodEstimator)
+
+# ----------------------------
+# Step 4: Inference
+# ----------------------------
+
+inference = VariableElimination(model)
+
+# ----------------------------
+# Step 5: Prediction
+# ----------------------------
+
+result = inference.query(
+    variables=['Pass'],
+    evidence={'StudyHours': 'High', 'Attendance': 'High'}
+)
+
+print("Probability Distribution:")
+print(result)
+
+
+
