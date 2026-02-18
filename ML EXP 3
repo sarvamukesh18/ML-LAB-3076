@@ -1,0 +1,14 @@
+print("\nPredictions after training:")
+predictions = neural_net.forward(X)
+
+# Convert probabilities to binary output (0 or 1)
+binary_predictions = (predictions > 0.5).astype(int)
+
+print("Input (X):\n", X)
+print("\nExpected Output (y):\n", y)
+print("\nPredicted Output (probabilities):\n", predictions)
+print("\nPredicted Output (binary):\n", binary_predictions)
+
+# You can also check accuracy
+accuracy = np.mean(binary_predictions == y)
+print(f"\nAccuracy: {accuracy * 100:.2f}%")
